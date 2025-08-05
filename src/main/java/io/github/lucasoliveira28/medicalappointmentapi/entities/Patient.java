@@ -27,15 +27,10 @@ public class Patient implements Serializable {
     @OneToMany(mappedBy = "patient")
     private Set<Appointment> appointments;
 
-    public Patient(PatientRequestDTO patient) {
-        BeanUtils.copyProperties(patient, this);
-    }
-
     public Patient() {
     }
 
-    public Patient(Long id, String name, String email, String phone, String cpf, Boolean active) {
-        this.id = id;
+    public Patient(String name, String email, String phone, String cpf, Boolean active) {
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -105,5 +100,18 @@ public class Patient implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, cpf);
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", active=" + active +
+                ", appointments=" + appointments +
+                '}';
     }
 }

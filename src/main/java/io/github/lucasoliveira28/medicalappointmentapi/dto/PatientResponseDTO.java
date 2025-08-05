@@ -1,6 +1,6 @@
 package io.github.lucasoliveira28.medicalappointmentapi.dto;
 
-public record PatientRequestDTO(
+public record PatientResponseDTO(
         String name,
         String email,
         String phone,

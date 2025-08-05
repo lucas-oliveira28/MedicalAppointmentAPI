@@ -23,6 +23,7 @@ public class AppointmentService {
 
     @Autowired
     private PatientService patientService;
+
     @Autowired
     private DoctorRepository doctorRepository;
 
@@ -32,18 +33,6 @@ public class AppointmentService {
 
     public List<Appointment> findAllAppointments() {
         return appointmentRepository.findAll();
-    }
-
-    public Boolean CreateAppointment(Appointment appointment, String doctorId, Long patientId) {
-
-        appointment.setPatient(patientService.findPatientById(patientId));
-        appointment.setDoctor(doctorRepository.findDoctorById(UUID.fromString(doctorId)));
-
-        if (appointment.getDoctor().getActive().equals(false) || appointment.getPatient().getActive().equals(false)) {
-            return false;
-        }
-        appointmentRepository.save(appointment);
-        return true;
     }
 
     public Appointment updateStatus(Long id, Appointment appointmentStatus) {

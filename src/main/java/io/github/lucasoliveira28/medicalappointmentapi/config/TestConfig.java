@@ -23,9 +23,6 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private PatientRepository patientRepository;
 
-    @Autowired
-    private AppointmentRepository appointmentRepository;
-
     @Override
     public void run(String... args) throws Exception {
 
@@ -33,8 +30,9 @@ public class TestConfig implements CommandLineRunner {
                 "CRM/PE 12345", MedicalSpeciality.CARDIOLOGY, "983900042", true);
         doctorRepository.save(d1);
 
-        Patient p1 = new Patient(null, "João José", "joao.jose@gmail.com",
+        Patient p1 = new Patient("João José", "joao.jose@gmail.com",
                 "912345678", "12345678900", true);
         patientRepository.save(p1);
+
     }
 }
