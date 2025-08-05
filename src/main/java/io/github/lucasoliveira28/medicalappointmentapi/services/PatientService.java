@@ -1,13 +1,13 @@
 package io.github.lucasoliveira28.medicalappointmentapi.services;
 
-import io.github.lucasoliveira28.medicalappointmentapi.entities.Doctor;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.Patient;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.PatientRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
@@ -27,8 +27,17 @@ public class PatientService {
         return patientRepository.findPatientById(id);
     }
 
-    public List<Patient> findAllPatients() {
-        return patientRepository.findAll();
+    public List<PatientRequestDTO> getAllPatients() {
+        return patientRepository.findAll().stream().map(
+                patient -> new PatientRequestDTO(
+                        patient.getId(),
+                        patient.getName(),
+                        patient.getEmail(),
+                        patient.getPhone(),
+                        patient.getCpf(),
+                        patient.getActive()
+                )
+        ).collect(Collectors.toList());
     }
 
     public void CreatePatient(Patient patient) {

@@ -1,7 +1,9 @@
 package io.github.lucasoliveira28.medicalappointmentapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.PatientRequestDTO;
 import jakarta.persistence.*;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -24,6 +26,10 @@ public class Patient implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "patient")
     private Set<Appointment> appointments;
+
+    public Patient(PatientRequestDTO patient) {
+        BeanUtils.copyProperties(patient, this);
+    }
 
     public Patient() {
     }

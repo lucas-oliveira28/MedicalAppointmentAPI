@@ -1,6 +1,7 @@
 package io.github.lucasoliveira28.medicalappointmentapi.controllers;
 
 import io.github.lucasoliveira28.medicalappointmentapi.entities.Patient;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.PatientRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.PatientRepository;
 import io.github.lucasoliveira28.medicalappointmentapi.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,8 @@ public class PatientController {
     public PatientService service;
 
     @GetMapping
-    public ResponseEntity<List<Patient>> findAllPatients() {
-        List<Patient> list = service.findAllPatients();
-        return ResponseEntity.ok(list);
+    public ResponseEntity<List<PatientRequestDTO>> getAllPatients() {
+        return ResponseEntity.ok(service.getAllPatients());
     }
 
     @GetMapping("/searchid")
