@@ -3,8 +3,6 @@ package io.github.lucasoliveira28.medicalappointmentapi.controllers;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update.PatientUpdateRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.PatientResponseDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.PatientRequestDTO;
-import io.github.lucasoliveira28.medicalappointmentapi.entities.Patient;
-import io.github.lucasoliveira28.medicalappointmentapi.repository.PatientRepository;
 import io.github.lucasoliveira28.medicalappointmentapi.services.PatientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +18,6 @@ import java.util.Map;
 public class PatientController {
 
     @Autowired
-    public PatientRepository patientRepository;
-
-    @Autowired
     public PatientService service;
 
     @GetMapping
@@ -35,18 +30,18 @@ public class PatientController {
         return ResponseEntity.ok(service.getPatient(params));
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public ResponseEntity<PatientRequestDTO> savePatient(@RequestBody @Valid PatientRequestDTO patient) {
         service.savePatient(patient);
         return ResponseEntity.status(HttpStatus.CREATED).body(patient);
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<PatientResponseDTO> deletePatient(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(service.deletePatient(id));
     }
 
-    @PutMapping("/{id}/update")
+    @PutMapping("/update/{id}")
     public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable Long id, @RequestBody PatientUpdateRequestDTO patient) {
         return ResponseEntity.ok(service.updatePatient(id, patient));
     }
