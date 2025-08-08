@@ -1,4 +1,4 @@
-package io.github.lucasoliveira28.medicalappointmentapi.dto;
+package io.github.lucasoliveira28.medicalappointmentapi.dto.responses;
 
 public record PatientResponseDTO(
         String name,

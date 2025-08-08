@@ -1,12 +1,13 @@
 package io.github.lucasoliveira28.medicalappointmentapi.controllers;
 
-import io.github.lucasoliveira28.medicalappointmentapi.dto.PatientResponseDTO;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update.PatientUpdateRequestDTO;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.PatientResponseDTO;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.PatientRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.Patient;
-import io.github.lucasoliveira28.medicalappointmentapi.dto.PatientRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.PatientRepository;
 import io.github.lucasoliveira28.medicalappointmentapi.services.PatientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +36,18 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<PatientRequestDTO> savePatient(@RequestBody PatientRequestDTO patient) {
+    public ResponseEntity<PatientRequestDTO> savePatient(@RequestBody @Valid PatientRequestDTO patient) {
         service.savePatient(patient);
         return ResponseEntity.status(HttpStatus.CREATED).body(patient);
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<PatientResponseDTO> deletePatient(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(service.deletePatient(id));
+    }
+
+    @PutMapping("/{id}/update")
+    public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable Long id, @RequestBody PatientUpdateRequestDTO patient) {
+        return ResponseEntity.ok(service.updatePatient(id, patient));
     }
 }

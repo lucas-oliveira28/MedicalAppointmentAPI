@@ -31,8 +31,7 @@ public class TestConfig implements CommandLineRunner {
         doctorRepository.save(d1);
 
         Patient p1 = new Patient("João José", "joao.jose@gmail.com",
-                "912345678", "12345678900", true);
+                "912345678", "12345678900", "joao123");
         patientRepository.save(p1);
-
     }
 }

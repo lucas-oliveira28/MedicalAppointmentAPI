@@ -1,9 +1,7 @@
 package io.github.lucasoliveira28.medicalappointmentapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.github.lucasoliveira28.medicalappointmentapi.dto.PatientRequestDTO;
 import jakarta.persistence.*;
-import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -21,6 +19,7 @@ public class Patient implements Serializable {
     private String email;
     private String phone;
     private String cpf;
+    private String password;
     private Boolean active;
 
     @JsonIgnore
@@ -30,12 +29,13 @@ public class Patient implements Serializable {
     public Patient() {
     }
 
-    public Patient(String name, String email, String phone, String cpf, Boolean active) {
+    public Patient(String name, String email, String phone, String cpf, String password) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.cpf = cpf;
-        this.active = active;
+        this.password = password;
+        this.active = true;
     }
 
     public Long getId() {
@@ -78,6 +78,14 @@ public class Patient implements Serializable {
         this.cpf = cpf;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Boolean getActive() {
         return active;
     }
@@ -110,6 +118,7 @@ public class Patient implements Serializable {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", cpf='" + cpf + '\'' +
+                ", password='" + password + '\'' +
                 ", active=" + active +
                 ", appointments=" + appointments +
                 '}';
