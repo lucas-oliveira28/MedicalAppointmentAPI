@@ -1,5 +1,6 @@
 package io.github.lucasoliveira28.medicalappointmentapi.validations;
 
+import io.github.lucasoliveira28.medicalappointmentapi.exceptions.RequestErrorException;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,34 +12,81 @@ public class RequestValidation {
     private PatientRepository patientRepository;
 
     public Boolean isNameValid(String name) {
-        return name.length() > 2 && name.length() <= 25;
+        if (name != null
+        && !name.isBlank()
+        && name.matches("[a-zA-Z]+")
+        && name.length() > 2
+        && name.length() <= 25) {
+            return true;
+        }
+        throw new RequestErrorException("Name is invalid");
     }
 
     public Boolean isEmailValid(String email) {
-        return email.contains("@") && email.contains(".com");
-    }
-
-    public Boolean isEmailUnique(String email) {
-        return !patientRepository.existsByEmail(email);
-    }
-
-    public Boolean isPhoneUnique(String phone) {
-        String normalized = normalizePhone(phone);
-        return normalized != null && !patientRepository.existsByPhone(normalized);
-    }
-
-    public Boolean isCpfUnique(String cpf) {
-        return !patientRepository.existsByCpf(cpf);
+        if (email != null
+        && !email.isBlank()
+        && isEmailUnique(email)
+        && email.contains("@")
+        && email.contains(".com")) {
+            return true;
+        }
+        throw new RequestErrorException("Email is invalid");
     }
 
     public Boolean isPhoneValid(String phone) {
-        // Aceita formatos com ou sem parênteses e hifens
         String regex = "^(\\(?\\d{2}\\)?\\s?)?(9\\d{4}-?\\d{4})$";
-        return phone != null && phone.matches(regex);
+
+        if (phone != null && phone.matches(regex)) {
+            String normalizedPhone = normalizePhone(phone);
+            if (isPhoneUnique(normalizedPhone)) {
+                return true;
+            }
+        }
+        throw new RequestErrorException("Phone is invalid");
+    }
+
+    public Boolean isCpfValid(String cpf) {
+        if (cpf != null
+        && !cpf.isBlank()
+        && isCpfUnique(cpf)
+        && cpf.matches("^[0-9]+$")
+        && cpf.length() == 11) {
+            return true;
+        }
+        throw new RequestErrorException("Cpf is invalid");
+    }
+
+    public Boolean isPasswordValid(String password) {
+        if (password != null
+        && !password.isBlank()
+        && password.length() >= 8) {
+            return true;
+        }
+        throw new RequestErrorException("Password is invalid");
+    }
+
+    public Boolean isEmailUnique(String email) {
+        if (!patientRepository.existsByEmail(email)) {
+            return true;
+        }
+        throw new RequestErrorException("Email already exists");
+    }
+
+    public Boolean isPhoneUnique(String normalizedPhone) {
+        if (!patientRepository.existsByPhone(normalizedPhone)) {
+            return true;
+        }
+        throw new RequestErrorException("Phone already exists");
+    }
+
+    public Boolean isCpfUnique(String cpf) {
+        if (!patientRepository.existsByCpf(cpf)) {
+            return true;
+        }
+        throw new RequestErrorException("Cpf already exists");
     }
 
     public String normalizePhone(String phone) {
-        if (phone == null) return null;
 
         String digits = phone.replaceAll("\\D", "");
 
@@ -54,8 +102,7 @@ public class RequestValidation {
             return "+55" + digits;
         }
 
-        return null;
+        throw new RequestErrorException("Invalid phone number");
     }
-
 
 }

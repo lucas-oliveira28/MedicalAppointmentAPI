@@ -4,8 +4,10 @@ import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update.Patie
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.PatientResponseDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.PatientRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.Patient;
+import io.github.lucasoliveira28.medicalappointmentapi.exceptions.RequestErrorException;
 import io.github.lucasoliveira28.medicalappointmentapi.exceptions.RequestNotFoundException;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.PatientRepository;
+import io.github.lucasoliveira28.medicalappointmentapi.validations.RequestValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ public class PatientService {
     @Autowired
     private PatientRepository patientRepository;
 
+    @Autowired
+    private RequestValidation validation;
+
     public List<PatientResponseDTO> getAllPatients() {
         return patientRepository.findAll()
                 .stream()
@@ -26,17 +31,22 @@ public class PatientService {
                 .collect(Collectors.toList());
     }
 
-    //TODO: Validator for name length;
-    //TODO: Validator for email, phone and cpf if already exists;
-    //TODO: Refactor the method for validating dto info;
     public void savePatient(PatientRequestDTO dto) {
         var entity = buildPatientEntity(dto);
         patientRepository.save(entity);
     }
 
     private Patient buildPatientEntity(PatientRequestDTO dto) {
-        return new Patient(
-                dto.name(), dto.email(), dto.phone(), dto.cpf(), dto.password());
+        if (validation.isNameValid(dto.name())
+        && validation.isEmailValid(dto.email())
+        && validation.isPhoneValid(dto.phone())
+        && validation.isCpfValid(dto.cpf())
+        && validation.isPasswordValid(dto.password())
+        ) {
+            return new Patient(
+                    dto.name(), dto.email(), validation.normalizePhone(dto.phone()), dto.cpf(), dto.password());
+        }
+        throw new RequestErrorException("Error on saving patient");
     }
 
     private PatientResponseDTO buildPatientResponseDTO(Patient patient) {
@@ -73,25 +83,22 @@ public class PatientService {
         throw new RequestNotFoundException("Patient not found");
     }
 
-    //TODO: Validator for name length;
-    //TODO: Validator for email form;
-    //TODO: Validator for email, phone and cpf if already exists;
     public PatientResponseDTO updatePatient(Long id, PatientUpdateRequestDTO dto) {
         Patient patient = patientRepository.findPatientById(id);
         if (patient != null) {
-            if (dto.name() != null && !dto.name().isEmpty()) {
+            if (validation.isNameValid(dto.name())) {
                 patient.setName(dto.name());
             }
-            if (dto.email() != null && !dto.email().isEmpty()) {
+            if (validation.isEmailValid(dto.email())) {
                 patient.setEmail(dto.email());
             }
-            if (dto.phone() != null && !dto.phone().isEmpty()) {
+            if (validation.isPhoneValid(dto.phone())) {
                 patient.setPhone(dto.phone());
             }
-            if (dto.cpf() != null && !dto.cpf().isEmpty()) {
+            if (validation.isCpfValid(dto.cpf())) {
                 patient.setCpf(dto.cpf());
             }
-            if (dto.password() != null && !dto.password().isEmpty()) {
+            if (validation.isPasswordValid(dto.password())) {
                 patient.setPassword(dto.password());
             }
             patientRepository.save(patient);
