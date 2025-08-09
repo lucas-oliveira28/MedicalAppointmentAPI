@@ -1,58 +1,48 @@
 package io.github.lucasoliveira28.medicalappointmentapi.controllers;
 
-import io.github.lucasoliveira28.medicalappointmentapi.entities.Doctor;
-import io.github.lucasoliveira28.medicalappointmentapi.repository.DoctorRepository;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.DoctorRequestDTO;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update.DoctorUpdateRequestDTO;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.DoctorResponseDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.services.DoctorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/doctors")
 public class DoctorController {
 
     @Autowired
-    public DoctorRepository doctorRepository;
-
-    @Autowired
     public DoctorService service;
 
     @GetMapping
-    public ResponseEntity<List<Doctor>> findAllDoctors() {
-        List<Doctor> list = service.findAllDoctors();
-        return ResponseEntity.ok(list);
+    public ResponseEntity<List<DoctorResponseDTO>> getAllDoctors() {
+        return ResponseEntity.ok(service.getAllDoctors());
     }
 
-    @GetMapping("/searchid")
-    public ResponseEntity<Doctor> findDoctorById(@RequestParam String id) {
-        UUID doctorId = UUID.fromString(id);
-        return ResponseEntity.ok(service.findDoctorById(doctorId));
+    @GetMapping("/search")
+    public ResponseEntity<DoctorResponseDTO> getDoctor(@RequestParam Map<String, String> params) {
+        return ResponseEntity.ok(service.getDoctor(params));
     }
 
-    @GetMapping("/searchname")
-    public ResponseEntity<Doctor> findDoctorByName(@RequestParam String name) {
-        return ResponseEntity.ok(service.findDoctorByName(name));
-    }
-
-    @GetMapping("/searchcrm")
-    public ResponseEntity<Doctor> findDoctorByCrm(@RequestParam String crm) {
-        return ResponseEntity.ok(service.findDoctorByCrm(crm));
-    }
-
-    @PostMapping
-    public ResponseEntity<Doctor> saveDoctor(@RequestBody Doctor doctor) {
-        service.CreateDoctor(doctor);
+    @PostMapping("/new")
+    public ResponseEntity<DoctorRequestDTO> saveDoctor(@RequestBody @Valid DoctorRequestDTO doctor) {
+        service.saveDoctor(doctor);
         return ResponseEntity.status(HttpStatus.CREATED).body(doctor);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Doctor> updateDoctor(@PathVariable String id, @RequestBody Doctor doctor) {
-        return ResponseEntity.ok().body(service.updateActive(UUID.fromString(id), doctor));
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<DoctorResponseDTO> deleteDoctor(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(service.deleteDoctor(id));
     }
 
-
+    @PutMapping("/update/{id}")
+    public ResponseEntity<DoctorResponseDTO> updateDoctor(@PathVariable Long id, @RequestBody DoctorUpdateRequestDTO doctor) {
+        return ResponseEntity.ok(service.updateDoctor(id, doctor));
+    }
 }

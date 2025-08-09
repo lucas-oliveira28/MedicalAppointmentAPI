@@ -1,15 +1,17 @@
 package io.github.lucasoliveira28.medicalappointmentapi.validations;
 
+import io.github.lucasoliveira28.medicalappointmentapi.entities.enums.MedicalSpecialty;
 import io.github.lucasoliveira28.medicalappointmentapi.exceptions.RequestErrorException;
-import io.github.lucasoliveira28.medicalappointmentapi.repository.PatientRepository;
+import io.github.lucasoliveira28.medicalappointmentapi.repository.DoctorRepository;
+import io.github.lucasoliveira28.medicalappointmentapi.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RequestValidation {
+public class DoctorRequestValidation {
 
     @Autowired
-    private PatientRepository patientRepository;
+    private DoctorRepository doctorRepository;
 
     public Boolean isNameValid(String name) {
         if (name != null
@@ -20,6 +22,18 @@ public class RequestValidation {
             return true;
         }
         throw new RequestErrorException("Name is invalid");
+    }
+
+    public Boolean isMedicalSpecialtyValid(String medicalSpecialty) {
+        if (medicalSpecialty != null ) {
+            try {
+                MedicalSpecialty.valueOf(medicalSpecialty.toUpperCase());
+                return true;
+            } catch (IllegalArgumentException e) {
+                throw new RequestErrorException("Medical special is invalid");
+            }
+        }
+        throw new RequestErrorException("Medical special is invalid");
     }
 
     public Boolean isEmailValid(String email) {
@@ -45,15 +59,14 @@ public class RequestValidation {
         throw new RequestErrorException("Phone is invalid");
     }
 
-    public Boolean isCpfValid(String cpf) {
-        if (cpf != null
-        && !cpf.isBlank()
-        && isCpfUnique(cpf)
-        && cpf.matches("^[0-9]+$")
-        && cpf.length() == 11) {
+    public Boolean isCrmValid(String crm) {
+        if (crm != null
+                && !crm.isBlank()
+                && isCrmUnique(crm)
+                && crm.matches("^[0-9]{5}-[A-Z]{2}$")) {
             return true;
         }
-        throw new RequestErrorException("Cpf is invalid");
+        throw new RequestErrorException("CRM is invalid");
     }
 
     public Boolean isPasswordValid(String password) {
@@ -65,25 +78,34 @@ public class RequestValidation {
         throw new RequestErrorException("Password is invalid");
     }
 
+    public Boolean isActiveValid(String active) {
+        if (active != null) {
+            if (active.equals("true") || active.equals("false")) {
+                return true;
+            }
+        }
+        throw new RequestErrorException("Active status is invalid");
+    }
+
     public Boolean isEmailUnique(String email) {
-        if (!patientRepository.existsByEmail(email)) {
+        if (!doctorRepository.existsByEmail(email)) {
             return true;
         }
         throw new RequestErrorException("Email already exists");
     }
 
     public Boolean isPhoneUnique(String normalizedPhone) {
-        if (!patientRepository.existsByPhone(normalizedPhone)) {
+        if (!doctorRepository.existsByPhone(normalizedPhone)) {
             return true;
         }
         throw new RequestErrorException("Phone already exists");
     }
 
-    public Boolean isCpfUnique(String cpf) {
-        if (!patientRepository.existsByCpf(cpf)) {
+    public Boolean isCrmUnique(String crm) {
+        if (!doctorRepository.existsByCrm(crm)) {
             return true;
         }
-        throw new RequestErrorException("Cpf already exists");
+        throw new RequestErrorException("CRM already exists");
     }
 
     public String normalizePhone(String phone) {

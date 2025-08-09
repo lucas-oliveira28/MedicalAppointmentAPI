@@ -2,9 +2,8 @@ package io.github.lucasoliveira28.medicalappointmentapi.dto.requests;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-public record PatientRequestDTO(
+public record DoctorRequestDTO(
 
         @NotBlank(message = "Name cannot be blank")
         String name,
@@ -16,11 +15,14 @@ public record PatientRequestDTO(
         @NotBlank(message = "Phone cannot be blank")
         String phone,
 
-        @NotBlank(message = "CPF cannot be blank")
-        String cpf,
+        @NotBlank(message = "CRM cannot be blank")
+        String crm,
 
         @NotBlank(message = "Password cannot be blank")
-        String password
+        String password,
+
+        @NotBlank(message = "Password cannot be blank")
+        String specialty
 
 ) {
 

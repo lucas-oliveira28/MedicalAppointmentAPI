@@ -1,6 +1,6 @@
 package io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update;
 
-public record PatientUpdateRequestDTO(
+public record DoctorUpdateRequestDTO(
 
         String name,
 
@@ -8,9 +8,11 @@ public record PatientUpdateRequestDTO(
 
         String phone,
 
-        String cpf,
+        String crm,
 
         String password,
+
+        String specialty,
 
         Boolean active
 ) {

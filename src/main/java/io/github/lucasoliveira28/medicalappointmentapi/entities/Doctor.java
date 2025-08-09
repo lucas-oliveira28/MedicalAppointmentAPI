@@ -1,13 +1,12 @@
 package io.github.lucasoliveira28.medicalappointmentapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.github.lucasoliveira28.medicalappointmentapi.entities.enums.MedicalSpeciality;
+import io.github.lucasoliveira28.medicalappointmentapi.entities.enums.MedicalSpecialty;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "tb_doctor")
@@ -16,15 +15,17 @@ public class Doctor implements Serializable {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private Long id;
+
     private String name;
     private String email;
+    private String phone;
     private String crm;
+    private String password;
 
     @Enumerated(EnumType.STRING)
-    private MedicalSpeciality speciality;
+    private MedicalSpecialty specialty;
 
-    private String phone;
     private Boolean active;
 
     @JsonIgnore
@@ -34,21 +35,21 @@ public class Doctor implements Serializable {
     public Doctor() {
     }
 
-    public Doctor(UUID id, String name, String email, String crm, MedicalSpeciality speciality, String phone, Boolean active) {
-        this.id = id;
+    public Doctor(String name, String email, String phone, String crm, String password, MedicalSpecialty specialty) {
         this.name = name;
         this.email = email;
-        this.crm = crm;
-        this.speciality = speciality;
         this.phone = phone;
-        this.active = active;
+        this.crm = crm;
+        this.password = password;
+        this.specialty = specialty;
+        this.active = true;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -76,21 +77,30 @@ public class Doctor implements Serializable {
         this.crm = crm;
     }
 
-    public MedicalSpeciality getSpeciality() {
-        return speciality;
+    public MedicalSpecialty getSpecialty() {
+        return specialty;
     }
 
-    public void setSpeciality(MedicalSpeciality speciality) {
-        this.speciality = speciality;
+    public void setSpecialty(MedicalSpecialty specialty) {
+        this.specialty = specialty;
     }
 
     public String getPhone() {
         return phone;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
 
     public Boolean getActive() {
         return active;
