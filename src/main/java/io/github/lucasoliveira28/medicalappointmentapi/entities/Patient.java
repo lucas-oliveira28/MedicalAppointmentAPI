@@ -109,18 +109,4 @@ public class Patient implements Serializable {
     public int hashCode() {
         return Objects.hash(id, cpf);
     }
-
-    @Override
-    public String toString() {
-        return "Patient{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", cpf='" + cpf + '\'' +
-                ", password='" + password + '\'' +
-                ", active=" + active +
-                ", appointments=" + appointments +
-                '}';
-    }
 }

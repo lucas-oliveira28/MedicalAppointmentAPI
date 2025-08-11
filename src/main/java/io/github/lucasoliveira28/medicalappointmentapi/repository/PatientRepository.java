@@ -5,15 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PatientRepository extends JpaRepository<Patient, Long> {
 
-    public Patient findPatientById(Long id);
+    Patient findPatientById(Long id);
 
-    public Patient findPatientByName(String name);
+    Patient findPatientByName(String name);
 
-    public Patient findPatientByCpf(String cpf);
+    Patient findPatientByCpf(String cpf);
 
-    public Boolean existsByEmail(String email);
+    Boolean existsByEmail(String email);
 
-    public Boolean existsByPhone(String phone);
+    Boolean existsByPhone(String phone);
 
-    public Boolean existsByCpf(String cpf);
+    Boolean existsByCpf(String cpf);
 }

@@ -4,9 +4,9 @@ import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update.Patie
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.PatientResponseDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.PatientRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.Patient;
-import io.github.lucasoliveira28.medicalappointmentapi.exceptions.RequestErrorException;
 import io.github.lucasoliveira28.medicalappointmentapi.exceptions.RequestNotFoundException;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.PatientRepository;
+import io.github.lucasoliveira28.medicalappointmentapi.validations.GeneralValidation;
 import io.github.lucasoliveira28.medicalappointmentapi.validations.PatientRequestValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +18,16 @@ import java.util.stream.Collectors;
 @Service
 public class PatientService {
 
-    @Autowired
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
+    private final PatientRequestValidation validation;
+    private final GeneralValidation generalValidation;
 
     @Autowired
-    private PatientRequestValidation validation;
+    public PatientService(PatientRepository patientRepository, PatientRequestValidation validation, GeneralValidation generalValidation) {
+        this.patientRepository = patientRepository;
+        this.validation = validation;
+        this.generalValidation = generalValidation;
+    }
 
     public List<PatientResponseDTO> getAllPatients() {
         return patientRepository.findAll()
@@ -37,21 +42,21 @@ public class PatientService {
     }
 
     private Patient buildPatientEntity(PatientRequestDTO dto) {
-        if (validation.isNameValid(dto.name())
-        && validation.isEmailValid(dto.email())
-        && validation.isPhoneValid(dto.phone())
-        && validation.isCpfValid(dto.cpf())
-        && validation.isPasswordValid(dto.password())
-        ) {
-            return new Patient(
-                    dto.name(), dto.email(), validation.normalizePhone(dto.phone()), dto.cpf(), dto.password());
-        }
-        throw new RequestErrorException("Error on saving patient");
+        generalValidation.isNameValid(dto.name());
+        validation.isEmailValid(dto.email());
+        validation.isPhoneValid(dto.phone());
+        validation.isCpfValid(dto.cpf());
+        generalValidation.isPasswordValid(dto.password());
+        return new Patient(
+                dto.name(), dto.email(), generalValidation.normalizePhone(dto.phone()),
+                dto.cpf(), dto.password()
+        );
     }
 
     private PatientResponseDTO buildPatientResponseDTO(Patient patient) {
         return new PatientResponseDTO(
-                patient.getId(), patient.getName(), patient.getEmail(), patient.getPhone(), patient.getCpf(), patient.getActive()
+                patient.getId(), patient.getName(), patient.getEmail(),
+                patient.getPhone(), patient.getCpf(), patient.getActive()
         );
     }
 
@@ -87,34 +92,28 @@ public class PatientService {
         Patient patient = patientRepository.findPatientById(id);
         if (patient != null) {
             if (dto.name() != null) {
-                if (validation.isNameValid(dto.name())) {
-                    patient.setName(dto.name());
-                }
+                generalValidation.isNameValid(dto.name());
+                patient.setName(dto.name());
             }
             if (dto.email() != null) {
-                if (validation.isEmailValid(dto.email())) {
-                    patient.setEmail(dto.email());
-                }
+                validation.isEmailValid(dto.email());
+                patient.setEmail(dto.email());
             }
             if (dto.phone() != null) {
-                if (validation.isPhoneValid(dto.phone())) {
-                    patient.setPhone(validation.normalizePhone(dto.phone()));
-                }
+                validation.isPhoneValid(dto.phone());
+                patient.setPhone(generalValidation.normalizePhone(dto.phone()));
             }
             if (dto.cpf() != null) {
-                if (validation.isCpfValid(dto.cpf())) {
-                    patient.setCpf(dto.cpf());
-                }
+                validation.isCpfValid(dto.cpf());
+                patient.setCpf(dto.cpf());
             }
             if (dto.password() != null) {
-                if (validation.isPasswordValid(dto.password())) {
-                    patient.setPassword(dto.password());
-                }
+                generalValidation.isPasswordValid(dto.password());
+                patient.setPassword(dto.password());
             }
             if (dto.active() != null) {
-                if (validation.isActiveValid(dto.active().toString())) {
-                    patient.setActive(dto.active());
-                }
+                generalValidation.isActiveValid(dto.active().toString());
+                patient.setActive(dto.active());
             }
             patientRepository.save(patient);
             return buildPatientResponseDTO(patient);

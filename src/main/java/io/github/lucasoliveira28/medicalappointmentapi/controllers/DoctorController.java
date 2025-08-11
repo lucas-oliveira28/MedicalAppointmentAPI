@@ -17,8 +17,12 @@ import java.util.Map;
 @RequestMapping("/doctors")
 public class DoctorController {
 
+    public final DoctorService service;
+
     @Autowired
-    public DoctorService service;
+    public DoctorController(DoctorService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ResponseEntity<List<DoctorResponseDTO>> getAllDoctors() {

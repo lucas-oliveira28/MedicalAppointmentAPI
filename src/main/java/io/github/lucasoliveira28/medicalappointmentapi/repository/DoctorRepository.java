@@ -5,15 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
-    public Doctor findDoctorById(Long id);
+    Doctor findDoctorById(Long id);
 
-    public Doctor findDoctorByName(String name);
+    Doctor findDoctorByName(String name);
 
-    public Doctor findDoctorByCrm(String crm);
+    Doctor findDoctorByCrm(String crm);
 
-    public Boolean existsByEmail(String email);
+    Boolean existsByEmail(String email);
 
-    public Boolean existsByPhone(String phone);
+    Boolean existsByPhone(String phone);
 
-    public Boolean existsByCrm(String crm);
+    Boolean existsByCrm(String crm);
 }
