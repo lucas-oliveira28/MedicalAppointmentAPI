@@ -32,16 +32,21 @@ public class Appointment implements Serializable {
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
+    @ManyToOne()
+    @JoinColumn(name = "availability_id")
+    private DoctorAvailability availability;
+
     public Appointment() {
     }
 
-    public Appointment(Long id, String date, String reason,
-                       AppointmentStatus status) {
-        this.id = id;
+    public Appointment(String date, String reason, AppointmentStatus status, Patient patient, Doctor doctor, DoctorAvailability availability) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy'T'HH:mm");
         this.date = LocalDateTime.parse(date, formatter);
         this.reason = reason;
         this.status = status;
+        this.patient = patient;
+        this.doctor = doctor;
+        this.availability = availability;
     }
 
     public Long getId() {
@@ -100,15 +105,23 @@ public class Appointment implements Serializable {
         this.doctor = doctor;
     }
 
+    public DoctorAvailability getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(DoctorAvailability availability) {
+        this.availability = availability;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Appointment that = (Appointment) o;
-        return Objects.equals(id, that.id) && status == that.status;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status);
+        return Objects.hashCode(id);
     }
 }

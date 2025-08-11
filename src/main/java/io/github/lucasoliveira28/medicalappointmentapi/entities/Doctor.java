@@ -14,7 +14,7 @@ public class Doctor implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -31,6 +31,10 @@ public class Doctor implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "doctor")
     private Set<Appointment> appointments;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "doctor")
+    private Set<DoctorAvailability> availabilities;
 
     public Doctor() {
     }
@@ -112,6 +116,10 @@ public class Doctor implements Serializable {
 
     public Set<Appointment> getAppointments() {
         return appointments;
+    }
+
+    public Set<DoctorAvailability> getAvailabilities() {
+        return availabilities;
     }
 
     @Override
