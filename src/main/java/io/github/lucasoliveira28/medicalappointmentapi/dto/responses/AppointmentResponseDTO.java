@@ -1,8 +1,6 @@
 package io.github.lucasoliveira28.medicalappointmentapi.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.lucasoliveira28.medicalappointmentapi.entities.Doctor;
-import io.github.lucasoliveira28.medicalappointmentapi.entities.Patient;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.enums.AppointmentStatus;
 
 import java.time.LocalDateTime;
@@ -20,7 +18,9 @@ public record AppointmentResponseDTO(
 
         PatientResponseDTO patient,
 
-        DoctorResponseDTO doctor
+        DoctorResponseDTO doctor,
+
+        DoctorAvailabilityResponseDTO availability
 
 ) {
 

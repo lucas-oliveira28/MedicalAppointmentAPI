@@ -2,12 +2,15 @@ package io.github.lucasoliveira28.medicalappointmentapi.services;
 
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.AppointmentRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.AppointmentResponseDTO;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.DoctorAvailabilityResponseDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.DoctorResponseDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.PatientResponseDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.Appointment;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.Doctor;
+import io.github.lucasoliveira28.medicalappointmentapi.entities.DoctorAvailability;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.Patient;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.enums.AppointmentStatus;
+import io.github.lucasoliveira28.medicalappointmentapi.exceptions.RequestNotFoundException;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.AppointmentRepository;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.DoctorAvailabilityRepository;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.DoctorRepository;
@@ -46,9 +49,23 @@ public class AppointmentService {
 
     private AppointmentResponseDTO buildAppointmentResponseDTO(Appointment appointment) {
         return new AppointmentResponseDTO(
-                appointment.getId(), appointment.getDate(), appointment.getReason(),
-                appointment.getStatus(), buildPatientResponseDTO(appointment.getPatient()),
-                buildDoctorResponseDTO(appointment.getDoctor())
+                appointment.getId(),
+                appointment.getDate(),
+                appointment.getReason(),
+                appointment.getStatus(),
+                buildPatientResponseDTO(appointment.getPatient()),
+                buildDoctorResponseDTO(appointment.getDoctor()),
+                buildDoctorAvailabilityResponseDTO(appointment.getAvailability())
+        );
+    }
+
+    private DoctorAvailabilityResponseDTO buildDoctorAvailabilityResponseDTO(DoctorAvailability doctorAvailability) {
+        return new DoctorAvailabilityResponseDTO(
+                doctorAvailability.getId(),
+                buildDoctorResponseDTO(doctorAvailability.getDoctor()),
+                doctorAvailability.getStartTime(),
+                doctorAvailability.getEndTime(),
+                doctorAvailability.getAvailable()
         );
     }
 
@@ -66,12 +83,12 @@ public class AppointmentService {
         );
     }
 
-    public Appointment buildAppointmentEntity(AppointmentRequestDTO dto) {
+    private Appointment buildAppointmentEntity(AppointmentRequestDTO dto) {
         return new Appointment(
                 dto.date(), dto.reason(), AppointmentStatus.valueOf(dto.status()),
                 patientRepository.findPatientById(dto.patientId()),
                 doctorRepository.findDoctorById(dto.doctorId()),
-                doctorAvailabilityRepository.findByDoctorId(dto.availabilityId())
+                doctorAvailabilityRepository.findDoctorAvailabilityById(dto.availabilityId())
         );
     }
 
@@ -86,8 +103,22 @@ public class AppointmentService {
         validation.doctorIdValidation(dto.doctorId());
         validation.patientIdValidation(dto.patientId());
         validation.doctorAvailabilityIdValidation(dto.availabilityId());
+        doctorAvailabilityRepository.findDoctorAvailabilityById(dto.availabilityId()).setAvailable(false);
         var appointment = buildAppointmentEntity(dto);
         appointmentRepository.save(appointment);
+    }
+
+    public AppointmentResponseDTO deleteAppointment(Long id) {
+        Appointment appointment = appointmentRepository.findAppointmentById(id);
+
+        if (appointment != null) {
+            appointment.getAvailability().setAvailable(true);
+            appointment.getAvailability().setAppointment(null);
+            appointmentRepository.delete(appointment);
+            return buildAppointmentResponseDTO(appointment);
+        }
+
+        throw new RequestNotFoundException("Appointment not found");
     }
 
 }

@@ -31,8 +31,8 @@ public class Appointment implements Serializable {
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
-    @ManyToOne()
-    @JoinColumn(name = "availability_id")
+    @OneToOne
+    @JoinColumn(name = "availability_id", unique = true)
     private DoctorAvailability availability;
 
     public Appointment() {

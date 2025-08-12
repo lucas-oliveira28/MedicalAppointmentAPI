@@ -22,8 +22,8 @@ public class DoctorAvailability implements Serializable {
     private Doctor doctor;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "availability")
-    private Set<Appointment> appointments;
+    @OneToOne(mappedBy = "availability")
+    private Appointment appointment;
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -78,8 +78,12 @@ public class DoctorAvailability implements Serializable {
         this.available = available;
     }
 
-    public Set<Appointment> getAppointments() {
-        return appointments;
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
     }
 
     @Override
