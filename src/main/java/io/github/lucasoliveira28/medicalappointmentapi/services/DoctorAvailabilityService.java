@@ -88,6 +88,7 @@ public class DoctorAvailabilityService {
                 dto.startDate(),
                 dto.endDate()
         );
+        validation.endDateValidation(dto.startDate(), dto.endDate());
         doctorAvailabilityRepository.save(buildDoctorAvailabilityEntity(dto));
     }
 

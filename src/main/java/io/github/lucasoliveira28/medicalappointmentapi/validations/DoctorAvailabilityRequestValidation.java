@@ -37,4 +37,10 @@ public class DoctorAvailabilityRequestValidation {
         }
     }
 
+    public void endDateValidation(LocalDateTime startDate, LocalDateTime endDate) {
+        if (endDate.isBefore(startDate)) {
+            throw new RequestErrorException("End date must be after start date!");
+        }
+    }
+
 }
