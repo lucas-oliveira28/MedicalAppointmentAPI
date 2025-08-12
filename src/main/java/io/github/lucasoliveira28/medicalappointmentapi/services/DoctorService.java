@@ -42,20 +42,18 @@ public class DoctorService {
         doctorRepository.save(entity);
     }
 
-    private Doctor buildDoctorEntity(DoctorRequestDTO dto) {
-        generalValidation.isNameValid(dto.name());
-        validation.isEmailValid(dto.email());
-        validation.isPhoneValid(dto.phone());
-        validation.isCrmValid(dto.crm());
-        generalValidation.isPasswordValid(dto.password());
-        validation.isMedicalSpecialtyValid(dto.specialty());
+    protected Doctor buildDoctorEntity(DoctorRequestDTO dto) {
+        validation.isCrmUnique(dto.crm());
+        validation.isPhoneUnique(generalValidation.normalizePhone(dto.phone()));
+        validation.isEmailUnique(dto.email());
+
         return new Doctor(
                 dto.name(), dto.email(), generalValidation.normalizePhone(dto.phone()),
                 dto.crm(), dto.password(), MedicalSpecialty.valueOf(dto.specialty())
         );
     }
 
-    private DoctorResponseDTO buildDoctorResponseDTO(Doctor doctor) {
+    protected DoctorResponseDTO buildDoctorResponseDTO(Doctor doctor) {
         return new DoctorResponseDTO(
                 doctor.getId(), doctor.getName(), doctor.getEmail(),
                 doctor.getPhone(), doctor.getCrm(), doctor.getSpecialty(), doctor.getActive()
@@ -94,31 +92,27 @@ public class DoctorService {
         Doctor doctor = doctorRepository.findDoctorById(id);
         if (doctor != null) {
             if (dto.name() != null) {
-                generalValidation.isNameValid(dto.name());
                 doctor.setName(dto.name());
             }
             if (dto.email() != null) {
-                validation.isEmailValid(dto.email());
+                validation.isEmailUnique(dto.email());
                 doctor.setEmail(dto.email());
             }
             if (dto.phone() != null) {
-                validation.isPhoneValid(dto.phone());
+                validation.isPhoneUnique(generalValidation.normalizePhone(dto.phone()));
                 doctor.setPhone(generalValidation.normalizePhone(dto.phone()));
             }
             if (dto.crm() != null) {
-                validation.isCrmValid(dto.crm());
+                validation.isCrmUnique(dto.crm());
                 doctor.setCrm(dto.crm());
             }
             if (dto.password() != null) {
-                generalValidation.isPasswordValid(dto.password());
                 doctor.setPassword(dto.password());
             }
             if (dto.specialty() != null) {
-                validation.isMedicalSpecialtyValid(dto.specialty());
                 doctor.setSpecialty(MedicalSpecialty.valueOf(dto.specialty()));
             }
             if (dto.active() != null) {
-                generalValidation.isActiveValid(dto.active().toString());
                 doctor.setActive(dto.active());
             }
             doctorRepository.save(doctor);

@@ -1,11 +1,18 @@
 package io.github.lucasoliveira28.medicalappointmentapi.dto.requests;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDateTime;
 
 public record AppointmentRequestDTO(
 
-        @NotBlank(message = "Date cannot be blank")
-        String date,
+        @NotNull(message = "Date is required")
+        @Future(message = "The date must be in the future")
+        @JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm")
+        LocalDateTime date,
 
         @NotBlank(message = "Reason cannot be blank")
         String reason,
@@ -13,13 +20,13 @@ public record AppointmentRequestDTO(
         @NotBlank(message = "Status cannot be blank")
         String status,
 
-        @NotBlank(message = "PatientID cannot be blank")
+        @NotNull(message = "PatientID cannot be null")
         Long patientId,
 
-        @NotBlank(message = "DoctorID cannot be blank")
+        @NotNull(message = "DoctorID cannot be null")
         Long doctorId,
 
-        @NotBlank(message = "AvailabilityID cannot be blank")
+        @NotNull(message = "AvailabilityID cannot be null")
         Long availabilityId
 
 ) {

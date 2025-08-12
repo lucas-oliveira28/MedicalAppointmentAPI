@@ -42,11 +42,10 @@ public class PatientService {
     }
 
     private Patient buildPatientEntity(PatientRequestDTO dto) {
-        generalValidation.isNameValid(dto.name());
-        validation.isEmailValid(dto.email());
-        validation.isPhoneValid(dto.phone());
-        validation.isCpfValid(dto.cpf());
-        generalValidation.isPasswordValid(dto.password());
+        validation.isCpfUnique(dto.cpf());
+        validation.isEmailUnique(dto.email());
+        validation.isPhoneUnique(generalValidation.normalizePhone(dto.phone()));
+
         return new Patient(
                 dto.name(), dto.email(), generalValidation.normalizePhone(dto.phone()),
                 dto.cpf(), dto.password()
@@ -92,27 +91,24 @@ public class PatientService {
         Patient patient = patientRepository.findPatientById(id);
         if (patient != null) {
             if (dto.name() != null) {
-                generalValidation.isNameValid(dto.name());
                 patient.setName(dto.name());
             }
             if (dto.email() != null) {
-                validation.isEmailValid(dto.email());
+                validation.isEmailUnique(dto.email());
                 patient.setEmail(dto.email());
             }
             if (dto.phone() != null) {
-                validation.isPhoneValid(dto.phone());
+                validation.isPhoneUnique(generalValidation.normalizePhone(dto.phone()));
                 patient.setPhone(generalValidation.normalizePhone(dto.phone()));
             }
             if (dto.cpf() != null) {
-                validation.isCpfValid(dto.cpf());
+                validation.isCpfUnique(dto.cpf());
                 patient.setCpf(dto.cpf());
             }
             if (dto.password() != null) {
-                generalValidation.isPasswordValid(dto.password());
                 patient.setPassword(dto.password());
             }
             if (dto.active() != null) {
-                generalValidation.isActiveValid(dto.active().toString());
                 patient.setActive(dto.active());
             }
             patientRepository.save(patient);

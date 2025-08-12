@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Entity
@@ -17,7 +16,7 @@ public class Appointment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy'T'HH:mm")
+    @JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm")
     private LocalDateTime date;
 
     private String reason;
@@ -39,9 +38,8 @@ public class Appointment implements Serializable {
     public Appointment() {
     }
 
-    public Appointment(String date, String reason, AppointmentStatus status, Patient patient, Doctor doctor, DoctorAvailability availability) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy'T'HH:mm");
-        this.date = LocalDateTime.parse(date, formatter);
+    public Appointment(LocalDateTime date, String reason, AppointmentStatus status, Patient patient, Doctor doctor, DoctorAvailability availability) {
+        this.date = date;
         this.reason = reason;
         this.status = status;
         this.patient = patient;
