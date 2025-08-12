@@ -3,6 +3,7 @@ package io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +27,11 @@ public record AppointmentUpdateRequestDTO(
         Long doctorId,
 
         @NotEmpty(message = "AvailabilityID cannot be empty")
-        Long availabilityId
+        Long availabilityId,
+
+        @NotEmpty(message = "ReasonForCancellation cannot be empty")
+        @Size(min = 10, max = 255, message = "ReasonForCancellation must contain between 10 and 255 characters")
+        String reasonForCancellation
 
 ) {
 

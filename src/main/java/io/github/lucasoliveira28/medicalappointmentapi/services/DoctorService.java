@@ -70,7 +70,7 @@ public class DoctorService {
             }
         }
         if  (params.containsKey("crm")) {
-            var crm = params.get("cpf");
+            var crm = params.get("crm");
             Doctor doctor = doctorRepository.findDoctorByCrm(crm);
             if (doctor != null) {
                 return buildDoctorResponseDTO(doctor);

@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: MedicalAppointmentAPI
-  profiles:
-    active: test
-  jpa:
-    open-in-view: true

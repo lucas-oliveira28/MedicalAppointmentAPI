@@ -1,11 +1,11 @@
 package io.github.lucasoliveira28.medicalappointmentapi.services;
 
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.DoctorAvailabilityRequestDTO;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update.DoctorAvailabilityUpdateRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.*;
-import io.github.lucasoliveira28.medicalappointmentapi.entities.Appointment;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.Doctor;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.DoctorAvailability;
-import io.github.lucasoliveira28.medicalappointmentapi.entities.Patient;
+import io.github.lucasoliveira28.medicalappointmentapi.exceptions.RequestNotFoundException;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.DoctorAvailabilityRepository;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.DoctorRepository;
 import io.github.lucasoliveira28.medicalappointmentapi.validations.DoctorAvailabilityRequestValidation;
@@ -53,13 +53,6 @@ public class DoctorAvailabilityService {
         );
     }
 
-    private PatientResponseDTO buildPatientResponseDTO(Patient patient) {
-        return new PatientResponseDTO(
-                patient.getId(), patient.getName(), patient.getEmail(),
-                patient.getPhone(), patient.getCpf(), patient.getActive()
-        );
-    }
-
     private DoctorResponseDTO buildDoctorResponseDTO(Doctor doctor) {
         return new DoctorResponseDTO(
                 doctor.getId(), doctor.getName(), doctor.getEmail(), doctor.getPhone(),
@@ -96,5 +89,26 @@ public class DoctorAvailabilityService {
                 dto.endDate()
         );
         doctorAvailabilityRepository.save(buildDoctorAvailabilityEntity(dto));
+    }
+
+    public DoctorAvailabilityResponseDTO updateDoctorAvailability(Long id, DoctorAvailabilityUpdateRequestDTO dto) {
+        DoctorAvailability availability = doctorAvailabilityRepository.findDoctorAvailabilityById(id);
+
+        if (availability != null) {
+
+            if (dto.available() != null) {
+                availability.setAvailable(dto.available());
+            }
+            if (dto.startDate() != null) {
+                availability.setStartTime(dto.startDate());
+            }
+            if (dto.endDate() != null) {
+                availability.setEndTime(dto.endDate());
+            }
+
+            doctorAvailabilityRepository.save(availability);
+            return buildDoctorAvailabilityResponseDTO(availability);
+        }
+        throw new RequestNotFoundException("Doctor availability not found");
     }
 }

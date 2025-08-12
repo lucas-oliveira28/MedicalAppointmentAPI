@@ -20,7 +20,10 @@ public class Appointment implements Serializable {
     private LocalDateTime date;
 
     private String reason;
+
+    @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
+
     private String reasonForCancellation;
 
     @ManyToOne()

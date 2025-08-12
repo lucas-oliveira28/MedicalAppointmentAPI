@@ -1,6 +1,7 @@
 package io.github.lucasoliveira28.medicalappointmentapi.services;
 
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.AppointmentRequestDTO;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update.AppointmentUpdateRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.AppointmentResponseDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.DoctorAvailabilityResponseDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.DoctorResponseDTO;
@@ -144,6 +145,23 @@ public class AppointmentService {
             if (appointment != null) {
                 return buildAppointmentResponseDTO(appointment);
             }
+        }
+
+        throw new RequestNotFoundException("Appointment not found");
+    }
+
+    public AppointmentResponseDTO updateAppointment(Long id, AppointmentUpdateRequestDTO dto) {
+        Appointment appointment = appointmentRepository.findAppointmentById(id);
+
+        if (appointment != null) {
+            if (dto.reason() != null) {
+                appointment.setReason(dto.reason());
+            }
+            if (dto.status() != null) {
+                appointment.setStatus(AppointmentStatus.valueOf(dto.status()));
+            }
+            appointmentRepository.save(appointment);
+            return buildAppointmentResponseDTO(appointment);
         }
 
         throw new RequestNotFoundException("Appointment not found");

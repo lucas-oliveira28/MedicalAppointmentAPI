@@ -1,6 +1,7 @@
 package io.github.lucasoliveira28.medicalappointmentapi.controllers;
 
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.DoctorAvailabilityRequestDTO;
+import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update.DoctorAvailabilityUpdateRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.DoctorAvailabilityResponseDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.DoctorAvailabilityRepository;
 import io.github.lucasoliveira28.medicalappointmentapi.services.DoctorAvailabilityService;
@@ -20,7 +21,10 @@ public class DoctorAvailabilityController {
     public final DoctorAvailabilityService service;
 
     @Autowired
-    public DoctorAvailabilityController(DoctorAvailabilityRepository doctorAvailabilityRepository, DoctorAvailabilityService service) {
+    public DoctorAvailabilityController(
+            DoctorAvailabilityRepository doctorAvailabilityRepository,
+            DoctorAvailabilityService service
+    ) {
         this.doctorAvailabilityRepository = doctorAvailabilityRepository;
         this.service = service;
     }
@@ -36,9 +40,19 @@ public class DoctorAvailabilityController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<DoctorAvailabilityRequestDTO> saveDoctorAvailability(@RequestBody @Valid DoctorAvailabilityRequestDTO doctorAvailability) {
+    public ResponseEntity<DoctorAvailabilityRequestDTO> saveDoctorAvailability(
+            @RequestBody @Valid DoctorAvailabilityRequestDTO doctorAvailability
+    ) {
         service.saveDoctorAvailability(doctorAvailability);
         return ResponseEntity.status(HttpStatus.CREATED).body(doctorAvailability);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<DoctorAvailabilityResponseDTO> updateDoctorAvailability(
+            @PathVariable Long id,
+            @RequestBody @Valid DoctorAvailabilityUpdateRequestDTO doctorAvailability
+    ) {
+        return ResponseEntity.ok(service.updateDoctorAvailability(id, doctorAvailability));
     }
 
 }
