@@ -41,5 +41,7 @@ public record DoctorUpdateRequestDTO(
 
         @NotEmpty(message = "Active cannot be empty")
         Boolean active
+
 ) {
+
 }

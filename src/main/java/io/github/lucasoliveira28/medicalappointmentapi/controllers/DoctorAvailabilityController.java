@@ -3,7 +3,6 @@ package io.github.lucasoliveira28.medicalappointmentapi.controllers;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.DoctorAvailabilityRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update.DoctorAvailabilityUpdateRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.DoctorAvailabilityResponseDTO;
-import io.github.lucasoliveira28.medicalappointmentapi.repository.DoctorAvailabilityRepository;
 import io.github.lucasoliveira28.medicalappointmentapi.services.DoctorAvailabilityService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +16,12 @@ import java.util.List;
 @RequestMapping("/doctoravailability")
 public class DoctorAvailabilityController {
 
-    public final DoctorAvailabilityRepository doctorAvailabilityRepository;
     public final DoctorAvailabilityService service;
 
     @Autowired
     public DoctorAvailabilityController(
-            DoctorAvailabilityRepository doctorAvailabilityRepository,
             DoctorAvailabilityService service
     ) {
-        this.doctorAvailabilityRepository = doctorAvailabilityRepository;
         this.service = service;
     }
 

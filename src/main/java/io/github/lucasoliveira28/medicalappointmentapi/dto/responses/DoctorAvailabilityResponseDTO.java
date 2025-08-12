@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 public record DoctorAvailabilityResponseDTO(
 
         Long id,
-
         DoctorResponseDTO doctor,
 
         @JsonFormat(pattern = "dd-MM-yyyy'T'HH:mm")

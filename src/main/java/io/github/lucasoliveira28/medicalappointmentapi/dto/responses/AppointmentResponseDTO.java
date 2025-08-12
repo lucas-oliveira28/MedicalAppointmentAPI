@@ -13,13 +13,9 @@ public record AppointmentResponseDTO(
         LocalDateTime date,
 
         String reason,
-
         AppointmentStatus status,
-
         PatientResponseDTO patient,
-
         DoctorResponseDTO doctor,
-
         DoctorAvailabilityResponseDTO availability
 
 ) {

@@ -10,7 +10,5 @@ public interface DoctorAvailabilityRepository extends JpaRepository<DoctorAvaila
 
     DoctorAvailability findDoctorAvailabilityById(Long id);
 
-    DoctorAvailability findByAvailable(Boolean available);
-
     List<DoctorAvailability> findAllByAvailable(boolean b);
 }

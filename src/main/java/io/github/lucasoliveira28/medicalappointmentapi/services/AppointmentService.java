@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -159,6 +160,9 @@ public class AppointmentService {
             }
             if (dto.status() != null) {
                 appointment.setStatus(AppointmentStatus.valueOf(dto.status()));
+            }
+            if (dto.reasonForCancellation() != null && Objects.equals(dto.status(), "CANCELLED")) {
+                appointment.setReasonForCancellation(dto.reasonForCancellation());
             }
             appointmentRepository.save(appointment);
             return buildAppointmentResponseDTO(appointment);

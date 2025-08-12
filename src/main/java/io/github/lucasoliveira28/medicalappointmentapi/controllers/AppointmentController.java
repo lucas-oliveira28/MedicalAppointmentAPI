@@ -3,7 +3,6 @@ package io.github.lucasoliveira28.medicalappointmentapi.controllers;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.AppointmentRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update.AppointmentUpdateRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.AppointmentResponseDTO;
-import io.github.lucasoliveira28.medicalappointmentapi.repository.AppointmentRepository;
 import io.github.lucasoliveira28.medicalappointmentapi.services.AppointmentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +17,12 @@ import java.util.Map;
 @RequestMapping("/appointments")
 public class AppointmentController {
 
-    public final AppointmentRepository appointmentRepository;
     public final AppointmentService service;
 
     @Autowired
     public AppointmentController(
-            AppointmentRepository appointmentRepository,
             AppointmentService service
     ) {
-        this.appointmentRepository = appointmentRepository;
         this.service = service;
     }
 
