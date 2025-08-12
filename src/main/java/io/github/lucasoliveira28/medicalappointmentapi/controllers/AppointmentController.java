@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/appointments")
@@ -30,11 +31,17 @@ public class AppointmentController {
         return ResponseEntity.ok(service.getAllAppointments());
     }
 
+    @GetMapping
+    public ResponseEntity<AppointmentResponseDTO> getAppointment(@RequestParam Map<String, String> params) {
+        return  ResponseEntity.ok(service.getAppointment(params));
+    }
+
     @PostMapping("/new")
     public ResponseEntity<AppointmentRequestDTO> saveAppointment(@RequestBody @Valid AppointmentRequestDTO appointment) {
         service.saveAppointment(appointment);
         return ResponseEntity.status(HttpStatus.CREATED).body(appointment);
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<AppointmentResponseDTO> deleteAppointment(@PathVariable Long id) {

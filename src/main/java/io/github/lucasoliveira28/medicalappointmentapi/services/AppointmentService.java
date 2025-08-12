@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -116,6 +117,33 @@ public class AppointmentService {
             appointment.getAvailability().setAppointment(null);
             appointmentRepository.delete(appointment);
             return buildAppointmentResponseDTO(appointment);
+        }
+
+        throw new RequestNotFoundException("Appointment not found");
+    }
+
+    public AppointmentResponseDTO getAppointment(Map<String, String> params) {
+
+        if (params.containsKey("id")) {
+            var id = params.get("id");
+            Appointment appointment = appointmentRepository.findAppointmentById(Long.parseLong(id));
+            if (appointment != null) {
+                return buildAppointmentResponseDTO(appointment);
+            }
+        }
+        if (params.containsKey("doctorId")) {
+            var doctorId = params.get("doctorId");
+            Appointment appointment = appointmentRepository.findAppointmentByDoctorId(Long.parseLong(doctorId));
+            if (appointment != null) {
+                return buildAppointmentResponseDTO(appointment);
+            }
+        }
+        if (params.containsKey("patientId")) {
+            var patientId = params.get("patientId");
+            Appointment appointment = appointmentRepository.findAppointmentByPatientId(Long.parseLong(patientId));
+            if (appointment != null) {
+                return buildAppointmentResponseDTO(appointment);
+            }
         }
 
         throw new RequestNotFoundException("Appointment not found");
