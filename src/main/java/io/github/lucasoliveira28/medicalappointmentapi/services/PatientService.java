@@ -4,6 +4,7 @@ import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update.Patie
 import io.github.lucasoliveira28.medicalappointmentapi.dto.responses.PatientResponseDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.dto.requests.PatientRequestDTO;
 import io.github.lucasoliveira28.medicalappointmentapi.entities.Patient;
+import io.github.lucasoliveira28.medicalappointmentapi.entities.enums.PatientGender;
 import io.github.lucasoliveira28.medicalappointmentapi.exceptions.RequestNotFoundException;
 import io.github.lucasoliveira28.medicalappointmentapi.repository.PatientRepository;
 import io.github.lucasoliveira28.medicalappointmentapi.validations.GeneralValidation;
@@ -48,14 +49,17 @@ public class PatientService {
 
         return new Patient(
                 dto.name(), dto.email(), generalValidation.normalizePhone(dto.phone()),
-                dto.cpf(), dto.password()
+                dto.cpf(), dto.address(), dto.birthDate(),
+                PatientGender.valueOf(dto.gender()), dto.medicalHistory(), dto.password()
         );
     }
 
     private PatientResponseDTO buildPatientResponseDTO(Patient patient) {
         return new PatientResponseDTO(
                 patient.getId(), patient.getName(), patient.getEmail(),
-                patient.getPhone(), patient.getCpf(), patient.getActive()
+                patient.getPhone(), patient.getCpf(), patient.getAddress(),
+                patient.getBirthDate(), patient.getGender(),
+                patient.getMedicalHistory(), patient.getActive()
         );
     }
 
@@ -104,6 +108,15 @@ public class PatientService {
             if (dto.cpf() != null) {
                 validation.isCpfUnique(dto.cpf());
                 patient.setCpf(dto.cpf());
+            }
+            if (dto.address() != null) {
+                patient.setAddress(dto.address());
+            }
+            if (dto.birthDate() != null) {
+                patient.setBirthDate(dto.birthDate());
+            }
+            if (dto.gender() != null) {
+                patient.setGender(PatientGender.valueOf(dto.gender()));
             }
             if (dto.password() != null) {
                 patient.setPassword(dto.password());

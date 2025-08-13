@@ -75,7 +75,9 @@ public class AppointmentService {
     private PatientResponseDTO buildPatientResponseDTO(Patient patient) {
         return new PatientResponseDTO(
                 patient.getId(), patient.getName(), patient.getEmail(),
-                patient.getPhone(), patient.getCpf(), patient.getActive()
+                patient.getPhone(), patient.getCpf(), patient.getAddress(),
+                patient.getBirthDate(), patient.getGender(),
+                patient.getMedicalHistory(), patient.getActive()
         );
     }
 

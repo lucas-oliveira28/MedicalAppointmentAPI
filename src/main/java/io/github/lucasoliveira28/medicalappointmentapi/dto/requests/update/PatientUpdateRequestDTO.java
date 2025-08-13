@@ -1,10 +1,10 @@
 package io.github.lucasoliveira28.medicalappointmentapi.dto.requests.update;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
+
+import java.time.LocalDate;
 
 public record PatientUpdateRequestDTO(
 
@@ -28,9 +28,23 @@ public record PatientUpdateRequestDTO(
         @CPF(message = "CPF invalid")
         String cpf,
 
+        @NotEmpty(message = "address cannot be empty")
+        String address,
+
+        @NotEmpty(message = "birthDate cannot be empty")
+        @Past(message = "birthDate invalid")
+        @JsonFormat(pattern = "dd-MM-yyyy")
+        LocalDate birthDate,
+
+        @NotEmpty(message = "gender cannot be empty")
+        String gender,
+
         @NotEmpty(message = "Password cannot be empty")
         @Size(min = 8, max = 20, message = "Password must contain between 8 and 20 characters")
         String password,
+
+        @NotEmpty(message = "medicalHistory cannot be empty")
+        String medicalHistory,
 
         @NotEmpty(message = "Active cannot be empty")
         Boolean active

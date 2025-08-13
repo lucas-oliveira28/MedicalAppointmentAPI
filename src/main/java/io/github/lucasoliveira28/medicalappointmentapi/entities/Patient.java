@@ -1,9 +1,12 @@
 package io.github.lucasoliveira28.medicalappointmentapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.github.lucasoliveira28.medicalappointmentapi.entities.enums.PatientGender;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
 
@@ -20,7 +23,16 @@ public class Patient implements Serializable {
     private String email;
     private String phone;
     private String cpf;
+    private String address;
+
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate birthDate;
+
+    @Enumerated(EnumType.STRING)
+    private PatientGender gender;
+
     private String password;
+    private String medicalHistory;
     private Boolean active;
 
     @JsonIgnore
@@ -30,11 +42,18 @@ public class Patient implements Serializable {
     public Patient() {
     }
 
-    public Patient(String name, String email, String phone, String cpf, String password) {
+    public Patient(
+            String name, String email, String phone, String cpf,
+            String address, LocalDate birthDate, PatientGender gender,
+            String medicalHistory,String password) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.cpf = cpf;
+        this.address = address;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.medicalHistory = medicalHistory;
         this.password = password;
         this.active = true;
     }
@@ -79,12 +98,44 @@ public class Patient implements Serializable {
         this.cpf = cpf;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public PatientGender getGender() {
+        return gender;
+    }
+
+    public void setGender(PatientGender gender) {
+        this.gender = gender;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getMedicalHistory() {
+        return medicalHistory;
+    }
+
+    public void setMedicalHistory(String medicalHistory) {
+        this.medicalHistory = medicalHistory;
     }
 
     public Boolean getActive() {
