@@ -51,4 +51,10 @@ public class DoctorAvailabilityController {
         return ResponseEntity.ok(service.updateDoctorAvailability(id, doctorAvailability));
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteDoctorAvailability(@PathVariable Long id) {
+        service.deleteDoctorAvailability(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }

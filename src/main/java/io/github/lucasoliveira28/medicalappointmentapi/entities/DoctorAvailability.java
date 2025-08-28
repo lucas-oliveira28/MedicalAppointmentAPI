@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "tb_doctor_availability")
@@ -22,7 +21,7 @@ public class DoctorAvailability implements Serializable {
     private Doctor doctor;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "availability")
+    @OneToOne(mappedBy = "availability", cascade = CascadeType.REMOVE)
     private Appointment appointment;
 
     private LocalDateTime startTime;

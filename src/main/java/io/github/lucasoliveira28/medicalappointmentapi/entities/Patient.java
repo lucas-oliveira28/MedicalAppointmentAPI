@@ -36,7 +36,7 @@ public class Patient implements Serializable {
     private Boolean active;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "patient")
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.REMOVE)
     private Set<Appointment> appointments;
 
     public Patient() {

@@ -29,11 +29,11 @@ public class Doctor implements Serializable {
     private Boolean active;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE)
     private Set<Appointment> appointments;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE)
     private Set<DoctorAvailability> availabilities;
 
     public Doctor() {
